@@ -1,2 +1,2 @@
-# matura23-ml-mypicar-x
+# matura23-mypicar-x
 code for our picar-x robot
