@@ -19,7 +19,6 @@ class Matura23Utils(object):
 
          # in results ist die Liste der erkannten Objekte
         if (len(results) > 0 and results[0] is not None):
-            results = []
 
             # wir gehen über alle Elemente in der Liste und erstellen ein Objekt mit den Koordinaten und anderen Infos
             for i in range(len(results)):
