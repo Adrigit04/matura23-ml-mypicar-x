@@ -66,6 +66,8 @@ def main():
             
         countRun = countRun + 1
     
+    print("countFound:{} | counNotFound:{} | countRun:{}".format(countFound, countNotFound, countRun))
+
     Matura23Utils.doEnd()
 
 if __name__ == "__main__":
