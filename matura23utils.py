@@ -64,14 +64,24 @@ class Matura23Utils(object):
         # Warten um mehrere Bilder abzugleichen
         # => Sicherstellen Frucht und nicht nur falsch angezeigte Frucht
         # gibt True/False zurück je nach dem ob Frucht gefunden
+        found = False
         print('doSearchFruits')
+        # Code hier der entscheided True/False
+        found = True
+
+        return found 
 
     @staticmethod
     def doGoCloserToFruit(px,objectInfoList):
         # Zuerst Richtung einschlagen nach Koordinate von Bildern der Kamera
         # Danach mit Echosenosr annähern bis zum gewünschten Abstand
         # True/Fales ob beim Objekt angekommen
+        nearFruit = False
         print('doGoCloserToFruit')
+        # Code der entscheided ob Roboter vor der Frucht ist
+        nearFruit = True
+
+        return nearFruit
 
     @staticmethod
     def doPickUpFruit(px,objectInfoList):
@@ -87,11 +97,11 @@ class Matura23Utils(object):
         print('doSortInFruit')
         
     @staticmethod
-    def doStart(px,objectInfoList):
+    def doStart():
         # Konfigurationen zum Starten des Codes
         print('doStart')
         
     @staticmethod
-    def doEnd(px,objectInfoList):
+    def doEnd():
         # Konfigurationen zum Beenden des Codes
         print('doEnd')
