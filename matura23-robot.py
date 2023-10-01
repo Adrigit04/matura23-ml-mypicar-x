@@ -30,9 +30,10 @@ def main():
     countFound = 0
     countNotFound = 0
     countRun = 0
+    maxHits = 5
 
 
-    while True:
+    while countFound <= maxHits:
         img = Vilib.detect_obj_parameter['object_img']
         results = Vilib.detect_obj_parameter['object_results']
         objectInfoList = Matura23Utils.getDetectedObjectInfoList(img, results, CAMERA_WIDTH, CAMERA_HEIGHT)
@@ -40,15 +41,21 @@ def main():
             #print(objectInfoList)
 
         # beim ersten mal verändern wir die Position nicht, an Ort und Stelle suchen
-        if countRun > 0 
+        if countRun > 0: 
             Matura23Utils.doGoInNewPosition(px,objectInfoList)
 
         found = Matura23Utils.doSearchFruits(px,objectInfoList)
         if found == True:
             nearFruit = Matura23Utils.doGoCloserToFruit(px,objectInfoList)
+
+            # Nur wenn die Frucht gefunden wird und er sich in Position bringen kann
+            # bringt er die Frucht in den Slot
             if nearFruit == True:
+                countFound = countFound + 1
                 Matura23Utils.doPickUpFruit(px,objectInfoList)
                 Matura23Utils.doSortInFruit(px,objectInfoList)
+            else:
+                countNotFound = countNotFound + 1
 
 
 
