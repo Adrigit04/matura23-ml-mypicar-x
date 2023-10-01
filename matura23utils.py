@@ -45,7 +45,53 @@ class Matura23Utils(object):
 
                 # Objektinfo der Liste hinzufügen
                 objectInfoList.append(eachObjectInfo)       
-        else:
-            print('no object found')
+        # else:
+            # print('no object found')
 
         return objectInfoList
+
+
+
+
+
+    @staticmethod
+    def doGoInNewPosition(px,objectInfoList):
+        # Neue Suchposition einrichten
+        print('doGoInNewPosition')
+
+    @staticmethod
+    def doSearchFruits(px,objectInfoList):
+        # Warten um mehrere Bilder abzugleichen
+        # => Sicherstellen Frucht und nicht nur falsch angezeigte Frucht
+        # gibt True/False zurück je nach dem ob Frucht gefunden
+        print('doSearchFruits')
+
+    @staticmethod
+    def doGoCloserToFruit(px,objectInfoList):
+        # Zuerst Richtung einschlagen nach Koordinate von Bildern der Kamera
+        # Danach mit Echosenosr annähern bis zum gewünschten Abstand
+        # True/Fales ob beim Objekt angekommen
+        print('doGoCloserToFruit')
+
+    @staticmethod
+    def doPickUpFruit(px,objectInfoList):
+        # Aufladen der Frucht
+        # Vorläufig mit Text to Speech Ausgabe (tts)
+        print('doPickUpFruit')
+
+    @staticmethod
+    def doSortInFruit(px,objectInfoList):
+        # Frucht transportieren zu zugehrigem Slot
+        # Vorläufig mit tts
+        # Mit einem Counter, damit er nach 5 Früchten fertig wird
+        print('doSortInFruit')
+        
+    @staticmethod
+    def doStart(px,objectInfoList):
+        # Konfigurationen zum Starten des Codes
+        print('doStart')
+        
+    @staticmethod
+    def doEnd(px,objectInfoList):
+        # Konfigurationen zum Beenden des Codes
+        print('doEnd')

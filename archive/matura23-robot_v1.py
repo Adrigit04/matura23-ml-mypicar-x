@@ -22,7 +22,7 @@ def main():
     Vilib.object_detect_set_labels(path='/opt/vilib/matura23/labels.txt')
     Vilib.object_detect_switch(True)
 
-    px = Picarx() # instanzieren, aus Klasse Objekt machen
+    px = Picarx() # instanziere, aus Klasse Objekt machen
 
     while True:
         img = Vilib.detect_obj_parameter['object_img']
@@ -30,12 +30,6 @@ def main():
         objectInfoList = Matura23Utils.getDetectedObjectInfoList(img, results, CAMERA_WIDTH, CAMERA_HEIGHT)
         if len(objectInfoList) > 0:
             print(objectInfoList)
-
-        Matura23Utils.doGoInNewPosition(px,objectInfoList)
-
-
-
-
 
 if __name__ == "__main__":
     main()
