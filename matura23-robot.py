@@ -33,7 +33,7 @@ def main():
     maxHits = 5
 
 
-    while countFound <= maxHits:
+    while countFound < maxHits:
         img = Vilib.detect_obj_parameter['object_img']
         results = Vilib.detect_obj_parameter['object_results']
         objectInfoList = Matura23Utils.getDetectedObjectInfoList(img, results, CAMERA_WIDTH, CAMERA_HEIGHT)

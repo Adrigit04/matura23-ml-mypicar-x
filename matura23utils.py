@@ -16,6 +16,8 @@ class Matura23Utils(object):
     CAMERA_WIDTH = 640
     CAMERA_HEIGHT = 480
 
+    sleepSeconds = 0.5
+
     @staticmethod        
     def getDetectedObjectInfoList(img,results,cameraWidth=CAMERA_WIDTH,cameraHeight=CAMERA_HEIGHT):
         objectInfoList = []
@@ -61,7 +63,7 @@ class Matura23Utils(object):
     def doGoInNewPosition(px,objectInfoList):
         # Neue Suchposition einrichten
         print('doGoInNewPosition')
-        time.sleep(2)
+        time.sleep(Matura23Utils.sleepSeconds)
 
     @staticmethod
     def doSearchFruits(px,objectInfoList):
@@ -70,7 +72,7 @@ class Matura23Utils(object):
         # gibt True/False zurück je nach dem ob Frucht gefunden
         found = False
         print('doSearchFruits')
-        time.sleep(2)
+        time.sleep(Matura23Utils.sleepSeconds)
         # Code hier der entscheided True/False
         found = True
 
@@ -83,7 +85,7 @@ class Matura23Utils(object):
         # True/Fales ob beim Objekt angekommen
         nearFruit = False
         print('doGoCloserToFruit')
-        time.sleep(2)
+        time.sleep(Matura23Utils.sleepSeconds)
         # Code der entscheided ob Roboter vor der Frucht ist
         nearFruit = True
 
@@ -94,7 +96,7 @@ class Matura23Utils(object):
         # Aufladen der Frucht
         # Vorläufig mit Text to Speech Ausgabe (tts)
         print('doPickUpFruit')
-        time.sleep(2)
+        time.sleep(Matura23Utils.sleepSeconds)
 
     @staticmethod
     def doSortInFruit(px,objectInfoList):
@@ -102,7 +104,7 @@ class Matura23Utils(object):
         # Vorläufig mit tts
         # Mit einem Counter, damit er nach 5 Früchten fertig wird
         print('doSortInFruit')
-        time.sleep(2)
+        time.sleep(Matura23Utils.sleepSeconds)
         
     @staticmethod
     def doStart():
