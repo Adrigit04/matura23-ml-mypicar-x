@@ -63,7 +63,25 @@ class Matura23Utils(object):
     def doGoInNewPosition(px,objectInfoList):
         # Neue Suchposition einrichten
         print('doGoInNewPosition')
-        time.sleep(Matura23Utils.sleepSeconds)
+
+        for angle in range(0, 35):
+            px.set_dir_servo_angle(angle)
+            time.sleep(0.01)
+        px.backward(10)
+        time.sleep(0.5)
+        px.stop()
+
+        for angle in range(35, -35, -1):
+            px.set_dir_servo_angle(angle)
+            time.sleep(0.01)
+        px.forward(10)
+        time.sleep(0.5)
+        px.stop()
+
+        for angle in range(-35, 0):
+            px.set_dir_servo_angle(angle)
+            time.sleep(0.01)
+        
 
     @staticmethod
     def doSearchFruits(px,objectInfoList):

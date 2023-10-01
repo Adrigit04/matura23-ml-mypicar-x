@@ -57,10 +57,6 @@ def main():
             else:
                 countNotFound = countNotFound + 1
 
-
-
-
-
         else:
             print('no fruit in this position')
             
