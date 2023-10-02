@@ -35,10 +35,13 @@ class Matura23Utils(object):
                 xmax = int(xmax * cameraWidth)
                 ymin = int(ymin * cameraHeight)
                 ymax = int(ymax * cameraHeight)
-                # object_detection_parameter
+
+                #print("[xmin: {} | xmax: {} | ymin: {} | ymax {}]".format(xmin,xmax,ymin,ymax))
+
+                # Nullpunkt ist oben links im Quadrat
                 try:
-                    eachObjectInfo['x'] = int((xmin+xmax)/2) # center Coordinate default: 320 --> cameraWidth/2
-                    eachObjectInfo['y'] = int((ymin+ymax)/2) # center Coordinate default: 240 --> cameraHeight/2
+                    eachObjectInfo['x'] = xmin #int((xmin+xmax)/2) # center Coordinate default: 320 --> cameraWidth/2
+                    eachObjectInfo['y'] = ymin #int((ymin+ymax)/2) # center Coordinate default: 240 --> cameraHeight/2
                     eachObjectInfo['width'] = xmax-xmin # width
                     eachObjectInfo['height'] = ymax-ymin # height
                     eachObjectInfo['class_id'] = int(eachObject['class_id'])  # object class_id default: 0
@@ -179,13 +182,9 @@ class Matura23Utils(object):
         else:
             directionY = 'center'
         
+        print("{} [directionX: {} | deviationX: {} | directionY: {} | deviationY {}]".format(label,directionX,deviationX,directionY,deviationY))
 
 
-
-        
-        
-        # Code der entscheided ob Roboter vor der Frucht ist
-        time.sleep(Matura23Utils.sleepSeconds)
         
         nearFruit = True
 
