@@ -40,8 +40,8 @@ class Matura23Utils(object):
 
                 # Nullpunkt ist oben links im Quadrat
                 try:
-                    eachObjectInfo['x'] = xmin #int((xmin+xmax)/2) # center Coordinate default: 320 --> cameraWidth/2
-                    eachObjectInfo['y'] = ymin #int((ymin+ymax)/2) # center Coordinate default: 240 --> cameraHeight/2
+                    eachObjectInfo['x'] = xmin # x-coordinate
+                    eachObjectInfo['y'] = ymin # y-coordinate
                     eachObjectInfo['width'] = xmax-xmin # width
                     eachObjectInfo['height'] = ymax-ymin # height
                     eachObjectInfo['class_id'] = int(eachObject['class_id'])  # object class_id default: 0
@@ -145,6 +145,10 @@ class Matura23Utils(object):
         print('doGoCloserToFruit')
         nearFruit = False
 
+        # Einstellungen
+        velocity = 10
+        drivingTime = 0.5
+
         # Objekt Werte in Variablen
         xCoord = foundObjectInfo['x']
         yCoord = foundObjectInfo['y']
@@ -153,11 +157,11 @@ class Matura23Utils(object):
         classId = foundObjectInfo['class_id']
         label = foundObjectInfo['label']
         count = foundObjectInfo['count'] # number found objects from upper class z.B. 1 out of 3
-        centerXCoord = xCoord + width/2
-        centerYCoord = yCoord + height/2
+        centerXCoord = int(xCoord + width/2)
+        centerYCoord = int(yCoord + height/2)
 
-        cameraCenterX = cameraWidth/2
-        cameraCenterY = cameraHeight/2 
+        cameraCenterX = int(cameraWidth/2)
+        cameraCenterY = int(cameraHeight/2)
 
         # Zum berechnen der horizontalen Richtung und der Abweichung von der Mitte
         # => links, rechts, Mitte
@@ -182,8 +186,31 @@ class Matura23Utils(object):
         else:
             directionY = 'center'
         
-        print("{} [directionX: {} | deviationX: {} | directionY: {} | deviationY {}]".format(label,directionX,deviationX,directionY,deviationY))
+        #print("{} [directionX: {} | deviationX: {} | directionY: {} | deviationY {}]".format(label,directionX,deviationX,directionY,deviationY))
 
+        # Roboter ausrichten in Richtung der Frucht
+        # Max Ausrichtung von Servo 35 pro Richtung
+        # eine Hälfte ist cameraWidth/2 (bei 640 Pixel sind es 320 Pixel)
+        # Faktor pro Pixel ist 35/320
+
+        steeringFactorPerPixel = int(35/cameraWidth/2)
+        angleToObject = int(deviationX*steeringFactorPerPixel)
+        if angleToObject < 0:
+            angleToObject = max(-35,angleToObject) # -35 kleinster Servowinkel
+            for angle in range(0,angleToObject,-1):
+                px.set_dir_servo_angle(angle)
+                time.sleep(0.01)
+        else:
+            angleToObject = min(35,angleToObject) # 35 grösster Servowinkel
+            for angle in range(0,angleToObject):
+                px.set_dir_servo_angle(angle)
+                time.sleep(0.01)
+                
+        print(angleToObject)
+        px.forward(velocity)
+        time.sleep(drivingTime)
+        px.stop()
+        time.sleep(5)
 
         
         nearFruit = True
