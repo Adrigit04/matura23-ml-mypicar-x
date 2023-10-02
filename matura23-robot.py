@@ -31,6 +31,7 @@ def main():
     countNotFound = 0
     countRun = 0
     maxHits = 5
+    foundObjectInfo = {}
 
 
     while countFound < maxHits:
@@ -44,9 +45,9 @@ def main():
         if countRun > 0: 
             Matura23Utils.doGoInNewPosition(px,objectInfoList)
 
-        found = Matura23Utils.doSearchFruits(px,objectInfoList,CAMERA_WIDTH,CAMERA_HEIGHT)
+        found,foundObjectInfo = Matura23Utils.doSearchFruits(px,objectInfoList,CAMERA_WIDTH,CAMERA_HEIGHT)
         if found == True:
-            nearFruit = Matura23Utils.doGoCloserToFruit(px,objectInfoList)
+            nearFruit = Matura23Utils.doGoCloserToFruit(px, foundObjectInfo, CAMERA_WIDTH, CAMERA_HEIGHT)
 
             # Nur wenn die Frucht gefunden wird und er sich in Position bringen kann
             # bringt er die Frucht in den Slot

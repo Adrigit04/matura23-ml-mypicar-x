@@ -31,6 +31,7 @@ def main():
     countNotFound = 0
     countRun = 0
     maxHits = 5
+    foundObjectInfo = {}
 
 
     while countFound < maxHits:
@@ -50,11 +51,11 @@ def main():
                 time.sleep(3)
 
             if (True):
-                found = Matura23Utils.doSearchFruits(px,objectInfoList,CAMERA_WIDTH,CAMERA_HEIGHT)
+                found,foundObjectInfo = Matura23Utils.doSearchFruits(px,objectInfoList,CAMERA_WIDTH,CAMERA_HEIGHT)
                 time.sleep(0.1)
 
-            if (False):
-                nearFruit = Matura23Utils.doGoCloserToFruit(px,objectInfoList)
+            if (True):
+                nearFruit = Matura23Utils.doGoCloserToFruit(px, foundObjectInfo, CAMERA_WIDTH, CAMERA_HEIGHT)
 
             if (False):
                 Matura23Utils.doPickUpFruit(px,objectInfoList)

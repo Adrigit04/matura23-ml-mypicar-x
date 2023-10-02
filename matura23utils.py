@@ -115,7 +115,7 @@ class Matura23Utils(object):
                 foundCount = foundCount + 1
                 if foundCount >= maxFoundCount:
                     print(foundObjectInfo)
-                    return True
+                    return True, foundObjectInfo
                 
                 time.sleep(0.1)
 
@@ -128,18 +128,62 @@ class Matura23Utils(object):
                 foundYcord = 0
                 if notFoundCount >= maxNotFoundCount:
                     print('no object found in this position')
-                    return False
+                    return False, foundObjectInfo
                 
                 time.sleep(0.1)
 
 
     @staticmethod
-    def doGoCloserToFruit(px,objectInfoList):
+    def doGoCloserToFruit(px,foundObjectInfo,cameraWidth,cameraHeight):
         # Zuerst Richtung einschlagen nach Koordinate von Bildern der Kamera
         # Danach mit Echosenosr annähern bis zum gewünschten Abstand
         # True/Fales ob beim Objekt angekommen
-        nearFruit = False
+
         print('doGoCloserToFruit')
+        nearFruit = False
+
+        # Objekt Werte in Variablen
+        xCoord = foundObjectInfo['x']
+        yCoord = foundObjectInfo['y']
+        width = foundObjectInfo['width']
+        height = foundObjectInfo['height']
+        classId = foundObjectInfo['class_id']
+        label = foundObjectInfo['label']
+        count = foundObjectInfo['count'] # number found objects from upper class z.B. 1 out of 3
+        centerXCoord = xCoord + width/2
+        centerYCoord = yCoord + height/2
+
+        cameraCenterX = cameraWidth/2
+        cameraCenterY = cameraHeight/2 
+
+        # Zum berechnen der horizontalen Richtung und der Abweichung von der Mitte
+        # => links, rechts, Mitte
+        deviationX = centerXCoord - cameraCenterX
+        directionX = 'forward'
+        if deviationX < -10: # -10 als Puffer, deswegen nicht 0
+            directionX = 'left'
+        elif deviationX > 10:
+            directionX = 'right' # fruit right
+        else:
+            directionX = 'forward'
+        
+
+        # Zum berechnen der vertikalen Richtung und der Abweichung von der Mitte
+        # => Distanz von der Frucht
+        deviationY = centerYCoord - cameraCenterY
+        directionY = 'center'
+        if deviationY < -10:
+            directionY = 'up' # fruit up
+        elif deviationY > 10:
+            directionY = 'down'
+        else:
+            directionY = 'center'
+        
+
+
+
+        
+        
         # Code der entscheided ob Roboter vor der Frucht ist
         time.sleep(Matura23Utils.sleepSeconds)
         
