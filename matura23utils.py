@@ -1,3 +1,4 @@
+from vilib import Vilib
 import time
 
 
@@ -12,14 +13,12 @@ class Matura23Utils(object):
         4 : 'passionsfrucht'
     }
 
-    # default
-    CAMERA_WIDTH = 640
-    CAMERA_HEIGHT = 480
+
 
     sleepSeconds = 0.5
 
     @staticmethod        
-    def getDetectedObjectInfoList(img,results,cameraWidth=CAMERA_WIDTH,cameraHeight=CAMERA_HEIGHT):
+    def getDetectedObjectInfoList(img,results,cameraWidth,cameraHeight):
         objectInfoList = []
 
          # in results ist die Liste der erkannten Objekte
@@ -84,14 +83,47 @@ class Matura23Utils(object):
         
 
     @staticmethod
-    def doSearchFruits(px,objectInfoList):
+    def doSearchFruits(px,objectInfoList,cameraWidth,cameraHeight):
         # Warten um mehrere Bilder abzugleichen
         # => Sicherstellen Frucht und nicht nur falsch angezeigte Frucht
         # gibt True/False zurück je nach dem ob Frucht gefunden
         found = False
         print('doSearchFruits')
+
+        foundObjectInfo = {}
+        foundYcord = 0
+        while(True):
+            img = Vilib.detect_obj_parameter['object_img']
+            results = Vilib.detect_obj_parameter['object_results']
+            objectInfoList = Matura23Utils.getDetectedObjectInfoList(img, results, cameraWidth, cameraHeight)
+            if len(objectInfoList) > 0:
+                # Suche das Elemnt, welches zu unterst im Bildschirm ist
+                # Gefundenes Objekt in Variable merken, weil es mehrmals geshen werden muss um sicher zu gehen
+                # Wenn die Bedingungen erfüllt sind geben wir found = True zurück (return)
+
+                for i in range(len(objectInfoList)):
+                    eachObject = objectInfoList[i]
+                    if eachObject['y'] > foundYcord:
+                        foundYcord = eachObject['y']
+                        foundObjectInfo = eachObject
+                        print(foundObjectInfo)
+
+                time.sleep(1)
+
+
+            else:
+                # Wir haben noch nichts gefunden, aber wir versuchen es noch ein paar mal
+                # Danach False zurück geben
+                # Nichts gefunden, Variable zurückgesetzt
+                foundObjectInfo = {}
+                foundYcord = 0
+                time.sleep(1)
+
+
+
         time.sleep(Matura23Utils.sleepSeconds)
         # Code hier der entscheided True/False
+        
         found = True
 
         return found 
@@ -103,8 +135,9 @@ class Matura23Utils(object):
         # True/Fales ob beim Objekt angekommen
         nearFruit = False
         print('doGoCloserToFruit')
-        time.sleep(Matura23Utils.sleepSeconds)
         # Code der entscheided ob Roboter vor der Frucht ist
+        time.sleep(Matura23Utils.sleepSeconds)
+        
         nearFruit = True
 
         return nearFruit

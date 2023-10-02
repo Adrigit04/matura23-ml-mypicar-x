@@ -44,7 +44,7 @@ def main():
         if countRun > 0: 
             Matura23Utils.doGoInNewPosition(px,objectInfoList)
 
-        found = Matura23Utils.doSearchFruits(px,objectInfoList)
+        found = Matura23Utils.doSearchFruits(px,objectInfoList,CAMERA_WIDTH,CAMERA_HEIGHT)
         if found == True:
             nearFruit = Matura23Utils.doGoCloserToFruit(px,objectInfoList)
 
