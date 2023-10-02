@@ -188,12 +188,24 @@ class Matura23Utils(object):
         
         print("{} [directionX: {} | deviationX: {} | directionY: {} | deviationY {}]".format(label,directionX,deviationX,directionY,deviationY))
 
+
+        # workaround: Weil Servo nicht auf 0 einstellbar von der rechten Seite (+35)
+        for angle in range(0,-35,-1):
+            px.set_dir_servo_angle(angle)
+            time.sleep(0.01)
+
+        for angle in range(-35,0):
+            px.set_dir_servo_angle(angle)
+            time.sleep(0.01)
+        time.sleep(2)
+
+
         # Roboter ausrichten in Richtung der Frucht
         # Max Ausrichtung von Servo 35 pro Richtung
         # eine Hälfte ist cameraWidth/2 (bei 640 Pixel sind es 320 Pixel)
         # Faktor pro Pixel ist 35/320
 
-        steeringFactorPerPixel = 35/(cameraWidth/2)
+        steeringFactorPerPixel = (35/(cameraWidth/2))
         angleToObject = int(deviationX*steeringFactorPerPixel)
         print("angleToObject1:{}".format(angleToObject))
         if angleToObject < 0:
@@ -208,13 +220,46 @@ class Matura23Utils(object):
                 time.sleep(0.01)
                 
         print("angleToObject:{}".format(angleToObject))
-        px.forward(velocity)
-        time.sleep(drivingTime)
-        px.stop()
-        time.sleep(5)
 
+        px.forward(10)
+        time.sleep(1)
+        px.stop()
+        time.sleep(2)
+
+        # workaround: Weil Servo nicht auf 0 einstellbar von der rechten Seite (+35)
+        for angle in range(0,-35,-1):
+            px.set_dir_servo_angle(angle)
+            time.sleep(0.01)
+
+        for angle in range(-35,0):
+            px.set_dir_servo_angle(angle)
+            time.sleep(0.01)
+        time.sleep(2)
+
+
+        # Echosensor ansteuern um Stückweise an Objekt zu gelangen
+        targetDistance = 20
+        tryCount = 0
+        maxCount = 10
         
-        nearFruit = True
+        distance = round(px.ultrasonic.read(), 2)
+        if distance <= targetDistance:
+                nearFruit = True
+
+        while nearFruit == False and tryCount < maxCount:
+            px.forward(velocity)
+            time.sleep(0.5)
+            px.stop()
+            distance = round(px.ultrasonic.read(), 2)
+            time.sleep(1)
+            if distance <= targetDistance:
+                nearFruit = True
+            tryCount = tryCount + 1
+            
+
+        if nearFruit == True:
+            print('in front of object')
+
 
         return nearFruit
 

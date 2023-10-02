@@ -33,7 +33,7 @@ def main():
     maxHits = 5
     foundObjectInfo = {}
 
-
+    time.sleep(5)
     while countFound < maxHits:
         img = Vilib.detect_obj_parameter['object_img']
         results = Vilib.detect_obj_parameter['object_results']
@@ -56,6 +56,7 @@ def main():
 
             if (found == True):
                 nearFruit = Matura23Utils.doGoCloserToFruit(px,foundObjectInfo, CAMERA_WIDTH, CAMERA_HEIGHT)
+                break
 
             if (False):
                 Matura23Utils.doPickUpFruit(px,objectInfoList)
