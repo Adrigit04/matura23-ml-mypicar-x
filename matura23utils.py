@@ -92,6 +92,11 @@ class Matura23Utils(object):
 
         foundObjectInfo = {}
         foundYcord = 0
+        foundCount = 0
+        notFoundCount = 0
+        maxFoundCount = 10
+        maxNotFoundCount = 10
+
         while(True):
             img = Vilib.detect_obj_parameter['object_img']
             results = Vilib.detect_obj_parameter['object_results']
@@ -106,27 +111,27 @@ class Matura23Utils(object):
                     if eachObject['y'] > foundYcord:
                         foundYcord = eachObject['y']
                         foundObjectInfo = eachObject
-                        print(foundObjectInfo)
-
+                
+                foundCount = foundCount + 1
+                if foundCount >= maxFoundCount:
+                    print(foundObjectInfo)
+                    return True
+                
                 time.sleep(1)
-
 
             else:
                 # Wir haben noch nichts gefunden, aber wir versuchen es noch ein paar mal
                 # Danach False zurück geben
                 # Nichts gefunden, Variable zurückgesetzt
+                notFoundCount = notFoundCount + 1
                 foundObjectInfo = {}
                 foundYcord = 0
+                if notFoundCount >= maxNotFoundCount:
+                    print('no object found in this position')
+                    return False
+                
                 time.sleep(1)
 
-
-
-        time.sleep(Matura23Utils.sleepSeconds)
-        # Code hier der entscheided True/False
-        
-        found = True
-
-        return found 
 
     @staticmethod
     def doGoCloserToFruit(px,objectInfoList):
