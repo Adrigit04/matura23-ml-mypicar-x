@@ -117,7 +117,7 @@ class Matura23Utils(object):
                     print(foundObjectInfo)
                     return True
                 
-                time.sleep(1)
+                time.sleep(0.1)
 
             else:
                 # Wir haben noch nichts gefunden, aber wir versuchen es noch ein paar mal
@@ -130,7 +130,7 @@ class Matura23Utils(object):
                     print('no object found in this position')
                     return False
                 
-                time.sleep(1)
+                time.sleep(0.1)
 
 
     @staticmethod
