@@ -186,15 +186,16 @@ class Matura23Utils(object):
         else:
             directionY = 'center'
         
-        #print("{} [directionX: {} | deviationX: {} | directionY: {} | deviationY {}]".format(label,directionX,deviationX,directionY,deviationY))
+        print("{} [directionX: {} | deviationX: {} | directionY: {} | deviationY {}]".format(label,directionX,deviationX,directionY,deviationY))
 
         # Roboter ausrichten in Richtung der Frucht
         # Max Ausrichtung von Servo 35 pro Richtung
         # eine Hälfte ist cameraWidth/2 (bei 640 Pixel sind es 320 Pixel)
         # Faktor pro Pixel ist 35/320
 
-        steeringFactorPerPixel = int(35/cameraWidth/2)
+        steeringFactorPerPixel = 35/(cameraWidth/2)
         angleToObject = int(deviationX*steeringFactorPerPixel)
+        print("angleToObject1:{}".format(angleToObject))
         if angleToObject < 0:
             angleToObject = max(-35,angleToObject) # -35 kleinster Servowinkel
             for angle in range(0,angleToObject,-1):
@@ -206,7 +207,7 @@ class Matura23Utils(object):
                 px.set_dir_servo_angle(angle)
                 time.sleep(0.01)
                 
-        print(angleToObject)
+        print("angleToObject:{}".format(angleToObject))
         px.forward(velocity)
         time.sleep(drivingTime)
         px.stop()

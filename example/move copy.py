@@ -28,16 +28,16 @@ if __name__ == "__main__":
         #time.sleep(3)
 
         px.set_dir_servo_angle(0)
-        time.sleep(3)
+        time.sleep(1)
 
         px.set_dir_servo_angle(35)
-        time.sleep(3)
+        time.sleep(1)
 
         px.set_dir_servo_angle(-35)
-        time.sleep(3)
+        time.sleep(1)
 
         px.set_dir_servo_angle(0)
-        time.sleep(3)
+        time.sleep(1)
 
 
 
