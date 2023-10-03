@@ -1,5 +1,8 @@
 from vilib import Vilib
+from robot_hat import TTS
+
 import time
+
 
 
 # matura23 some vars and util functions
@@ -190,21 +193,14 @@ class Matura23Utils(object):
 
 
         # workaround: Weil Servo nicht auf 0 einstellbar von der rechten Seite (+35)
-        for angle in range(0,-35,-1):
-            px.set_dir_servo_angle(angle)
-            time.sleep(0.01)
-
-        for angle in range(-35,0):
-            px.set_dir_servo_angle(angle)
-            time.sleep(0.01)
-        time.sleep(2)
+        Matura23Utils.workaroundSetAngleZero(px)
+        time.sleep(0.1)
 
 
         # Roboter ausrichten in Richtung der Frucht
         # Max Ausrichtung von Servo 35 pro Richtung
         # eine Hälfte ist cameraWidth/2 (bei 640 Pixel sind es 320 Pixel)
         # Faktor pro Pixel ist 35/320
-
         steeringFactorPerPixel = (35/(cameraWidth/2))
         angleToObject = int(deviationX*steeringFactorPerPixel)
         print("angleToObject1:{}".format(angleToObject))
@@ -221,21 +217,14 @@ class Matura23Utils(object):
                 
         print("angleToObject:{}".format(angleToObject))
 
-        px.forward(10)
         time.sleep(1)
+        px.forward(velocity)
+        time.sleep(0.8)
         px.stop()
-        time.sleep(2)
+        time.sleep(1)
 
         # workaround: Weil Servo nicht auf 0 einstellbar von der rechten Seite (+35)
-        for angle in range(0,-35,-1):
-            px.set_dir_servo_angle(angle)
-            time.sleep(0.01)
-
-        for angle in range(-35,0):
-            px.set_dir_servo_angle(angle)
-            time.sleep(0.01)
-        time.sleep(2)
-
+        Matura23Utils.workaroundSetAngleZero(px)
 
         # Echosensor ansteuern um Stückweise an Objekt zu gelangen
         targetDistance = 20
@@ -248,12 +237,12 @@ class Matura23Utils(object):
 
         while nearFruit == False and tryCount < maxCount:
             px.forward(velocity)
-            time.sleep(0.5)
+            time.sleep(drivingTime)
             px.stop()
             distance = round(px.ultrasonic.read(), 2)
-            time.sleep(1)
             if distance <= targetDistance:
                 nearFruit = True
+
             tryCount = tryCount + 1
             
 
@@ -263,12 +252,20 @@ class Matura23Utils(object):
 
         return nearFruit
 
+    
+
     @staticmethod
     def doPickUpFruit(px,objectInfoList):
         # Aufladen der Frucht
         # Vorläufig mit Text to Speech Ausgabe (tts)
         print('doPickUpFruit')
         time.sleep(Matura23Utils.sleepSeconds)
+
+        words = ["Hello", "Hi", "Good bye", "Zwetschge"]
+        tts_robot = TTS()
+        for i in words:
+            print(i)
+            tts_robot.say(i)
 
     @staticmethod
     def doSortInFruit(px,objectInfoList):
@@ -287,3 +284,22 @@ class Matura23Utils(object):
     def doEnd():
         # Konfigurationen zum Beenden des Codes
         print('doEnd')
+
+
+
+
+
+
+#########################################################################################
+# Hilfsfunktionen
+#########################################################################################
+
+    @staticmethod
+    def workaroundSetAngleZero(px):
+        for angle in range(0,-35,-1):
+            px.set_dir_servo_angle(angle)
+            time.sleep(0.01)
+
+        for angle in range(-35,0):
+            px.set_dir_servo_angle(angle)
+            time.sleep(0.01)
