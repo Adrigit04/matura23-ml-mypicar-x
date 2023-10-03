@@ -173,12 +173,25 @@ class Matura23Utils(object):
         # Zum berechnen der horizontalen Richtung und der Abweichung von der Mitte
         # => links, rechts, Mitte
         deviationX = centerXCoord - cameraCenterX
-        directionX = Matura23Utils.getDirectionX(deviationX)
+        directionX = 'forward'
+        if deviationX < -10: # -10 als Puffer, deswegen nicht 0
+            directionX = 'left'
+        elif deviationX > 10:
+            directionX = 'right' # fruit right
+        else:
+            directionX = 'forward'
+        
 
         # Zum berechnen der vertikalen Richtung und der Abweichung von der Mitte
         # => Distanz von der Frucht
         deviationY = centerYCoord - cameraCenterY
-        directionY = Matura23Utils.getDirectionY(deviationY)
+        directionY = 'center'
+        if deviationY < -10:
+            directionY = 'up' # fruit up
+        elif deviationY > 10:
+            directionY = 'down'
+        else:
+            directionY = 'center'
         
         print("{} [directionX: {} | deviationX: {} | directionY: {} | deviationY {}]".format(label,directionX,deviationX,directionY,deviationY))
 
@@ -188,42 +201,13 @@ class Matura23Utils(object):
         time.sleep(0.1)
 
 
-
-        # Annähern mit Hilfe von minecart_plus.py
-        try:
-            lastAngleToObject = 0
-            while True:
-                # Roboter ausrichten in Richtung der Frucht
-                # Max Ausrichtung von Servo 35 pro Richtung
-                # eine Hälfte ist cameraWidth/2 (bei 640 Pixel sind es 320 Pixel)
-                # Faktor pro Pixel ist 35/320
-                steeringFactorPerPixel = (35/(cameraWidth/2))
-                angleToObject = int(deviationX*steeringFactorPerPixel)
-                print("angleToObject1:{}".format(angleToObject))
-                print("gm_val_list: %s, %s"%(gm_val_list, gm_state))
-                print(gm_state[0], lastAngleToObject)
-
-                if gm_state != "stop":
-                    last_state = gm_state
-
-                if gm_state == 'forward':
-                    px.set_dir_servo_angle(0)
-                    px.forward(velocity) 
-                elif gm_state == 'left':
-                    px.set_dir_servo_angle(angleToObject)
-                    px.forward(velocity) 
-                elif gm_state == 'right':
-                    px.set_dir_servo_angle(angleToObject)
-                    px.forward(velocity) 
-                else:
-                    outHandle()
-        finally:
-            px.stop()
-            print("stop and exit")
-            sleep(0.1)
-
-
-
+        # Roboter ausrichten in Richtung der Frucht
+        # Max Ausrichtung von Servo 35 pro Richtung
+        # eine Hälfte ist cameraWidth/2 (bei 640 Pixel sind es 320 Pixel)
+        # Faktor pro Pixel ist 35/320
+        steeringFactorPerPixel = (35/(cameraWidth/2))
+        angleToObject = int(deviationX*steeringFactorPerPixel)
+        print("angleToObject1:{}".format(angleToObject))
         if angleToObject < 0:
             angleToObject = max(-35,angleToObject) # -35 kleinster Servowinkel
             for angle in range(0,angleToObject,-1):
@@ -271,6 +255,7 @@ class Matura23Utils(object):
 
 
         return nearFruit
+
     
 
     @staticmethod
@@ -335,50 +320,3 @@ class Matura23Utils(object):
         for angle in range(-35,0):
             px.set_dir_servo_angle(angle)
             time.sleep(0.01)
-
-
-
-    @staticmethod
-    def getDirectionX(deviationX):
-        if deviationX < -10: # -10 als Puffer, deswegen nicht 0
-            directionX = 'left'
-        elif deviationX > 10:
-            directionX = 'right' # fruit right
-        else:
-            directionX = 'forward'
-        return directionX
-
-    @staticmethod
-    def getDirectionY(deviationY):
-        if deviationY < -10:
-            directionY = 'up' # fruit up
-        elif deviationY > 10:
-            directionY = 'down'
-        else:
-            directionY = 'center'
-        return directionY
-
-    @staticmethod
-    def getFoundObjectInfo(cameraWidth,cameraHeight,fruitLabel=""):
-        foundYCoord = 0
-        foundObjectInfo = {}
-
-        img = Vilib.detect_obj_parameter['object_img']
-        results = Vilib.detect_obj_parameter['object_results']
-        objectInfoList = Matura23Utils.getDetectedObjectInfoList(img, results, cameraWidth, cameraHeight)
-        if len(objectInfoList) > 0:
-            # Suche das Elemnt, welches zu unterst im Bildschirm ist
-            # Gefundenes Objekt in Variable merken, weil es mehrmals geshen werden muss um sicher zu gehen
-            # Wenn die Bedingungen erfüllt sind geben wir found = True zurück (return)
-
-            for i in range(len(objectInfoList)):
-                eachObject = objectInfoList[i]
-                if eachObject['y'] > foundYCoord and eachObject['label'] == fruitLabel:
-                    foundYCoord = eachObject['y']
-                    foundObjectInfo = eachObject
-            
-            print(foundObjectInfo)
-            return True, foundObjectInfo
-        
-        else:
-            return False, foundObjectInfo

@@ -44,13 +44,15 @@ def main():
         found = False
         nearFruit = False
         try:
+            foundObjectInfo = {'label': 'kiwi'}
+
             Matura23Utils.doStart()
 
             if (False):
                 Matura23Utils.doGoInNewPosition(px,objectInfoList)
                 time.sleep(3)
 
-            if (True):
+            if (False):
                 found,foundObjectInfo = Matura23Utils.doSearchFruits(px,objectInfoList,CAMERA_WIDTH,CAMERA_HEIGHT)
                 time.sleep(0.1)
 
@@ -58,11 +60,11 @@ def main():
                 nearFruit = Matura23Utils.doGoCloserToFruit(px,foundObjectInfo, CAMERA_WIDTH, CAMERA_HEIGHT)
                 break
 
-            if (False):
-                Matura23Utils.doPickUpFruit(px,objectInfoList)
+            if (True):
+                Matura23Utils.doPickUpFruit(px,foundObjectInfo)
             
             if (False):
-                Matura23Utils.doSortInFruit(px,objectInfoList)
+                Matura23Utils.doSortInFruit(px,foundObjectInfo)
             
             Matura23Utils.doEnd()
 

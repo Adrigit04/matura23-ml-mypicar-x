@@ -33,7 +33,7 @@ def main():
     maxHits = 5
     foundObjectInfo = {}
 
-
+    time.sleep(5)
     while countFound < maxHits:
         img = Vilib.detect_obj_parameter['object_img']
         results = Vilib.detect_obj_parameter['object_results']
@@ -53,8 +53,8 @@ def main():
             # bringt er die Frucht in den Slot
             if nearFruit == True:
                 countFound = countFound + 1
-                Matura23Utils.doPickUpFruit(px,objectInfoList)
-                Matura23Utils.doSortInFruit(px,objectInfoList)
+                Matura23Utils.doPickUpFruit(px,foundObjectInfo)
+                Matura23Utils.doSortInFruit(px,foundObjectInfo)
             else:
                 countNotFound = countNotFound + 1
 
