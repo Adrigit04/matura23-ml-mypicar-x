@@ -158,13 +158,9 @@ class Matura23Utils(object):
         velocity = 10
         drivingTime = 0.5
 
-        
-
-
         # workaround: Weil Servo nicht auf 0 einstellbar von der rechten Seite (+35)
         Matura23Utils.workaroundSetAngleZero(px)
         time.sleep(0.1)
-
 
 
         # Annähern mit Hilfe von minecart_plus.py
@@ -246,7 +242,10 @@ class Matura23Utils(object):
 
                 
                 found,foundObjectInfo = Matura23Utils.getFoundObjectInfo(cameraWidth,cameraHeight,fruitLabel)
-                    
+        except Exception as e:
+            # Handle any type of error and print a custom error message
+            print("Error:", e)
+                   
         finally:
             px.stop()
             print("stop and exit")
