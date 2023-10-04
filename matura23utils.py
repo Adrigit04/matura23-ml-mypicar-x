@@ -173,7 +173,7 @@ class Matura23Utils(object):
             lastDirectionX = 'stop'
             fruitLabel = foundObjectInfo['label']
             found = True
-            while found == True:
+            while found == True and nearFruit == False:
                 # Objekt Werte in Variablen
                 xCoord = foundObjectInfo['x']
                 yCoord = foundObjectInfo['y']
@@ -230,11 +230,19 @@ class Matura23Utils(object):
                     elif lastDirectionX == 'left':
                         px.set_dir_servo_angle(-lastAngleToObject)
                         px.backward(10)
-                        
+
                     Matura23Utils.workaroundSetAngleZero(px)
 
-                    time.sleep(0.5)
-                    px.stop()
+                time.sleep(0.5)
+                px.stop()
+
+                # Echosensor ansteuern um Stückweise an Objekt zu gelangen
+                targetDistance = 20
+                
+                distance = round(px.ultrasonic.read(), 2)
+                if distance <= targetDistance:
+                    nearFruit = True
+                    print('in front of object')
 
                 
                 found,foundObjectInfo = Matura23Utils.getFoundObjectInfo(cameraWidth,cameraHeight,fruitLabel)
