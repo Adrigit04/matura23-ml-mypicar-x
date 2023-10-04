@@ -107,13 +107,15 @@ class Matura23Utils(object):
         maxNotFoundCount = 10
 
         while(True):
+
             time.sleep(1)
             img = Vilib.detect_obj_parameter['object_img']
             results = Vilib.detect_obj_parameter['object_results']
             objectInfoList = Matura23Utils.getDetectedObjectInfoList(img, results, cameraWidth, cameraHeight)
             if len(objectInfoList) > 0:
                 # Suche das Elemnt, welches zu unterst im Bildschirm ist
-                # Gefundenes Objekt in Variable merken, weil es mehrmals geshen werden muss um sicher zu gehen
+                # Anzahl Durchläufe in Variable merken,
+                # weil es mehrmals geshen werden muss um sicher zu gehen das keine falscher Treffer
                 # Wenn die Bedingungen erfüllt sind geben wir found = True zurück (return)
 
                 for i in range(len(objectInfoList)):
@@ -123,7 +125,7 @@ class Matura23Utils(object):
                         foundObjectInfo = eachObject
                 
                 foundCount = foundCount + 1
-                if foundCount >= maxFoundCount:
+                if foundCount >= maxFoundCount: # erst wenn es mehrmals gefunden wurde
                     print(foundObjectInfo)
                     return True, foundObjectInfo
                 
@@ -156,31 +158,7 @@ class Matura23Utils(object):
         velocity = 10
         drivingTime = 0.5
 
-        # Objekt Werte in Variablen
-        xCoord = foundObjectInfo['x']
-        yCoord = foundObjectInfo['y']
-        width = foundObjectInfo['width']
-        height = foundObjectInfo['height']
-        classId = foundObjectInfo['class_id']
-        label = foundObjectInfo['label']
-        count = foundObjectInfo['count'] # number found objects from upper class z.B. 1 out of 3
-        centerXCoord = int(xCoord + width/2)
-        centerYCoord = int(yCoord + height/2)
-
-        cameraCenterX = int(cameraWidth/2)
-        cameraCenterY = int(cameraHeight/2)
-
-        # Zum berechnen der horizontalen Richtung und der Abweichung von der Mitte
-        # => links, rechts, Mitte
-        deviationX = centerXCoord - cameraCenterX
-        directionX = Matura23Utils.getDirectionX(deviationX)
-
-        # Zum berechnen der vertikalen Richtung und der Abweichung von der Mitte
-        # => Distanz von der Frucht
-        deviationY = centerYCoord - cameraCenterY
-        directionY = Matura23Utils.getDirectionY(deviationY)
         
-        print("{} [directionX: {} | deviationX: {} | directionY: {} | deviationY {}]".format(label,directionX,deviationX,directionY,deviationY))
 
 
         # workaround: Weil Servo nicht auf 0 einstellbar von der rechten Seite (+35)
@@ -192,7 +170,36 @@ class Matura23Utils(object):
         # Annähern mit Hilfe von minecart_plus.py
         try:
             lastAngleToObject = 0
-            while True:
+            lastDirectionX = 'stop'
+            fruitLabel = foundObjectInfo['label']
+            found = True
+            while found == True:
+                # Objekt Werte in Variablen
+                xCoord = foundObjectInfo['x']
+                yCoord = foundObjectInfo['y']
+                width = foundObjectInfo['width']
+                height = foundObjectInfo['height']
+                classId = foundObjectInfo['class_id']
+                label = foundObjectInfo['label']
+                count = foundObjectInfo['count'] # number found objects from upper class z.B. 1 out of 3
+                centerXCoord = int(xCoord + width/2)
+                centerYCoord = int(yCoord + height/2)
+
+                cameraCenterX = int(cameraWidth/2)
+                cameraCenterY = int(cameraHeight/2)
+
+                # Zum berechnen der horizontalen Richtung und der Abweichung von der Mitte
+                # => links, rechts, Mitte
+                deviationX = centerXCoord - cameraCenterX
+                directionX = Matura23Utils.getDirectionX(deviationX)
+
+                # Zum berechnen der vertikalen Richtung und der Abweichung von der Mitte
+                # => Distanz von der Frucht
+                deviationY = centerYCoord - cameraCenterY
+                directionY = Matura23Utils.getDirectionY(deviationY)
+                
+                print("{} [directionX: {} | deviationX: {} | directionY: {} | deviationY {}]".format(label,directionX,deviationX,directionY,deviationY))
+
                 # Roboter ausrichten in Richtung der Frucht
                 # Max Ausrichtung von Servo 35 pro Richtung
                 # eine Hälfte ist cameraWidth/2 (bei 640 Pixel sind es 320 Pixel)
@@ -200,70 +207,45 @@ class Matura23Utils(object):
                 steeringFactorPerPixel = (35/(cameraWidth/2))
                 angleToObject = int(deviationX*steeringFactorPerPixel)
                 print("angleToObject1:{}".format(angleToObject))
-                print("gm_val_list: %s, %s"%(gm_val_list, gm_state))
-                print(gm_state[0], lastAngleToObject)
+                print(angleToObject,lastAngleToObject)
+                print(directionX,lastDirectionX)
 
-                if gm_state != "stop":
-                    last_state = gm_state
+                if directionX != "stop":
+                    lastDirectionX = directionX
 
-                if gm_state == 'forward':
+                if directionX == 'forward':
                     px.set_dir_servo_angle(0)
                     px.forward(velocity) 
-                elif gm_state == 'left':
+                elif directionX == 'right':
                     px.set_dir_servo_angle(angleToObject)
                     px.forward(velocity) 
-                elif gm_state == 'right':
+                elif directionX == 'left':
                     px.set_dir_servo_angle(angleToObject)
                     px.forward(velocity) 
                 else:
-                    outHandle()
+
+                    if lastDirectionX == 'right':
+                        px.set_dir_servo_angle(-lastAngleToObject)
+                        px.backward(10)
+                    elif lastDirectionX == 'left':
+                        px.set_dir_servo_angle(-lastAngleToObject)
+                        px.backward(10)
+                        
+                    Matura23Utils.workaroundSetAngleZero(px)
+
+                    time.sleep(0.5)
+                    px.stop()
+
+                
+                found,foundObjectInfo = Matura23Utils.getFoundObjectInfo(cameraWidth,cameraHeight,fruitLabel)
+                    
         finally:
             px.stop()
             print("stop and exit")
-            sleep(0.1)
+            time.sleep(0.1)
 
 
 
-        if angleToObject < 0:
-            angleToObject = max(-35,angleToObject) # -35 kleinster Servowinkel
-            for angle in range(0,angleToObject,-1):
-                px.set_dir_servo_angle(angle)
-                time.sleep(0.01)
-        else:
-            angleToObject = min(35,angleToObject) # 35 grösster Servowinkel
-            for angle in range(0,angleToObject):
-                px.set_dir_servo_angle(angle)
-                time.sleep(0.01)
-                
-        print("angleToObject:{}".format(angleToObject))
-
-        time.sleep(1)
-        px.forward(velocity)
-        time.sleep(0.8)
-        px.stop()
-        time.sleep(1)
-
-        # workaround: Weil Servo nicht auf 0 einstellbar von der rechten Seite (+35)
-        Matura23Utils.workaroundSetAngleZero(px)
-
-        # Echosensor ansteuern um Stückweise an Objekt zu gelangen
-        targetDistance = 20
-        tryCount = 0
-        maxCount = 10
-        
-        distance = round(px.ultrasonic.read(), 2)
-        if distance <= targetDistance:
-                nearFruit = True
-
-        while nearFruit == False and tryCount < maxCount:
-            px.forward(velocity)
-            time.sleep(drivingTime)
-            px.stop()
-            distance = round(px.ultrasonic.read(), 2)
-            if distance <= targetDistance:
-                nearFruit = True
-
-            tryCount = tryCount + 1
             
 
         if nearFruit == True:
@@ -367,10 +349,7 @@ class Matura23Utils(object):
         results = Vilib.detect_obj_parameter['object_results']
         objectInfoList = Matura23Utils.getDetectedObjectInfoList(img, results, cameraWidth, cameraHeight)
         if len(objectInfoList) > 0:
-            # Suche das Elemnt, welches zu unterst im Bildschirm ist
-            # Gefundenes Objekt in Variable merken, weil es mehrmals geshen werden muss um sicher zu gehen
-            # Wenn die Bedingungen erfüllt sind geben wir found = True zurück (return)
-
+            # Suche das Elemnt, welches zu unterst im Bildschirm ist und gleich fruitLabel ist
             for i in range(len(objectInfoList)):
                 eachObject = objectInfoList[i]
                 if eachObject['y'] > foundYCoord and eachObject['label'] == fruitLabel:
