@@ -323,7 +323,7 @@ class Matura23Utils(object):
         print('doSortInFruit')
         time.sleep(0.5)
 
-        words = ["bring {} to correct slot".format(label)]
+        words = ["please","bring {} to correct slot".format(label)]
         Matura23Utils.speakOut(words)
 
         px.backward(10)
