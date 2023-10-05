@@ -55,8 +55,8 @@ class Matura23Utils(object):
         # gibt True/False zurück je nach dem ob Frucht gefunden
         found = False
         print('doSearchFruits')
-        words = ["I am going to look for a fruit"]
-        Matura23Utils.speakOut(words)
+        #words = ["I am going to look for a fruit"]
+        #Matura23Utils.speakOut(words)
 
         foundObjectInfo = {}
         foundYcord = 0
