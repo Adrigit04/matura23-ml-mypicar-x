@@ -55,11 +55,6 @@ class Matura23Utils(object):
         # gibt True/False zurück je nach dem ob Frucht gefunden
         found = False
         print('doSearchFruits')
-        words = ["I am going to look for a fruit"]
-        tts_robot = TTS()
-        for i in words:
-            print(i)
-            tts_robot.say(i)
 
         foundObjectInfo = {}
         foundYcord = 0
@@ -67,8 +62,7 @@ class Matura23Utils(object):
         notFoundCount = 0
         maxFoundCount = 3
         maxNotFoundCount = 20
-        lastFoundObjectInfo = {}
-        
+
         while(True):
 
             time.sleep(0.1)
@@ -86,24 +80,10 @@ class Matura23Utils(object):
                     if eachObject['y'] > foundYcord:
                         foundYcord = eachObject['y']
                         foundObjectInfo = eachObject
-
-                    # Damit er wenn er gefundene Früchte aus dem Auge verliert nicht gleich aufgibt 
-                    # und in eine neue Position geht, merkt er sich die gefunden Frucht
-                    # und versucht zuerst diese Frucht trotzdem zu finden
-                    lastFoundObjectInfo = foundObjectInfo
-
-
                 
                 foundCount = foundCount + 1
                 if foundCount >= maxFoundCount: # erst wenn es mehrmals gefunden wurde
                     print("[doSearchFruit] object found:{}".format(foundObjectInfo))
-
-                    words = ["I see a {}".format(foundObjectInfo['label'])]
-                    tts_robot = TTS()
-                    for i in words:
-                        print(i)
-                        tts_robot.say(i)
-
                     return True, foundObjectInfo
                 
                 time.sleep(0.1)
@@ -116,22 +96,8 @@ class Matura23Utils(object):
                 foundObjectInfo = {}
                 foundYcord = 0
                 if notFoundCount >= maxNotFoundCount:
-
-                    # Wenn bereits eine Frucht gesehen, versucht er diese nun trotzdem zu fidnen
-                    # Wenn er diese aber nicht findet, geht er trotzdem weiter
-                    # um zu verhidnern, dass er jeder falsch geshenen Frucht nachgeht
-                    if lastFoundObjectInfo != {}:
-                        foundObjectInfo = lastFoundObjectInfo
-                        lastFoundObjectInfo = {}
-                        notFoundCount = 0
-                    else:
-                        print('no object found in this position')
-                        words = ["no fruit in this position"]
-                        tts_robot = TTS()
-                        for i in words:
-                            print(i)
-                            tts_robot.say(i)
-                        return False, foundObjectInfo
+                    print('no object found in this position')
+                    return False, foundObjectInfo
                 
                 time.sleep(0.1)
 
@@ -200,9 +166,9 @@ class Matura23Utils(object):
                 #------------------------------------------------------------------------
                 # Servo lässt sich nicht beliebig klein bewegen, deswegen Fixwert gesetzt
                 #------------------------------------------------------------------------
-                if angleToObject > 5:
+                if angleToObject > 15:
                     angleToObject = 20
-                elif angleToObject < -5:
+                elif angleToObject < -15:
                     angleToObject = -20
                 else:
                     directionX = 'forward'
@@ -355,22 +321,12 @@ class Matura23Utils(object):
         # workaround because tts isn't working without this code
         # https://forum.sunfounder.com/t/picar-x-speaker-not-working/289/2
         os.system('sudo killall pulseaudio')
-        words = ["Lets go"]
-        tts_robot = TTS()
-        for i in words:
-            print(i)
-            tts_robot.say(i)
         
         
     @staticmethod
     def doEnd():
         # Konfigurationen zum Beenden des Codes
         print('doEnd')
-        words = ["task completed"]
-        tts_robot = TTS()
-        for i in words:
-            print(i)
-            tts_robot.say(i)
 
 
 
