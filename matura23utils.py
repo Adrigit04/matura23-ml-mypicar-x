@@ -56,10 +56,7 @@ class Matura23Utils(object):
         found = False
         print('doSearchFruits')
         words = ["I am going to look for a fruit"]
-        tts_robot = TTS()
-        for i in words:
-            print(i)
-            tts_robot.say(i)
+        Matura23Utils.speakOut(words)
 
         foundObjectInfo = {}
         foundYcord = 0
@@ -99,10 +96,7 @@ class Matura23Utils(object):
                     print("[doSearchFruit] object found:{}".format(foundObjectInfo))
 
                     words = ["I see a {}".format(foundObjectInfo['label'])]
-                    tts_robot = TTS()
-                    for i in words:
-                        print(i)
-                        tts_robot.say(i)
+                    Matura23Utils.speakOut(words)
 
                     return True, foundObjectInfo
                 
@@ -127,10 +121,7 @@ class Matura23Utils(object):
                     else:
                         print('no object found in this position')
                         words = ["no fruit in this position"]
-                        tts_robot = TTS()
-                        for i in words:
-                            print(i)
-                            tts_robot.say(i)
+                        Matura23Utils.speakOut(words)
                         return False, foundObjectInfo
                 
                 time.sleep(0.1)
@@ -302,10 +293,7 @@ class Matura23Utils(object):
         print('doPickUpFruit')
 
         words = ["found {}".format(label)]
-        tts_robot = TTS()
-        for i in words:
-            print(i)
-            tts_robot.say(i)
+        Matura23Utils.speakOut(words)
 
         # Mit Echosensor warten, bis Objekt entfernt wird
         fruitInFront = True
@@ -323,10 +311,7 @@ class Matura23Utils(object):
         time.sleep(1)
 
         words = ["thank you for picking up {}".format(label)]
-        tts_robot = TTS()
-        for i in words:
-            print(i)
-            tts_robot.say(i)
+        Matura23Utils.speakOut(words)
 
 
     @staticmethod
@@ -339,10 +324,7 @@ class Matura23Utils(object):
         time.sleep(0.5)
 
         words = ["bring {} to correct slot".format(label)]
-        tts_robot = TTS()
-        for i in words:
-            print(i)
-            tts_robot.say(i)
+        Matura23Utils.speakOut(words)
         
         
 
@@ -356,10 +338,7 @@ class Matura23Utils(object):
         # https://forum.sunfounder.com/t/picar-x-speaker-not-working/289/2
         os.system('sudo killall pulseaudio')
         words = ["Lets go"]
-        tts_robot = TTS()
-        for i in words:
-            print(i)
-            tts_robot.say(i)
+        Matura23Utils.speakOut(words)
         
         
     @staticmethod
@@ -367,10 +346,7 @@ class Matura23Utils(object):
         # Konfigurationen zum Beenden des Codes
         print('doEnd')
         words = ["task completed"]
-        tts_robot = TTS()
-        for i in words:
-            print(i)
-            tts_robot.say(i)
+        Matura23Utils.speakOut(words)
 
 
 
@@ -498,3 +474,11 @@ class Matura23Utils(object):
 
         print(foundObjectInfo)
         return found,foundObjectInfo
+
+
+    @staticmethod
+    def speakOut(words):
+        tts_robot = TTS()
+        for i in words:
+            print(i)
+            tts_robot.say(i)
