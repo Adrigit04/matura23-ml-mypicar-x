@@ -160,6 +160,10 @@ class Matura23Utils(object):
                 print("Start angleToObject1:{}".format(angleToObject))
                 print(angleToObject,lastAngleToObject)
                 print(directionX,lastDirectionX)
+
+                #------------------------------------------------------------------------
+                # Servo lässt sich nicht beliebig klein bewegen, deswegen Fixwert gesetzt
+                #------------------------------------------------------------------------
                 if angleToObject > 0:
                     angleToObject = 20
                 else:
@@ -256,13 +260,28 @@ class Matura23Utils(object):
         # Aufladen der Frucht
         # Vorläufig mit Text to Speech Ausgabe (tts)
         print('doPickUpFruit')
-        time.sleep(0.5)
 
         words = ["found {}".format(label)]
         tts_robot = TTS()
         for i in words:
             print(i)
             tts_robot.say(i)
+
+        # Mit Echosensor warten, bis Objekt entfernt wird
+        fruitInFront = True
+        while fruitInFront == True:
+            targetDistance = 30
+            distance = round(px.ultrasonic.read(), 2)
+            if distance > targetDistance:
+                fruitInFront = False
+        time.sleep(1)
+
+        words = ["thank you for picking up {}".format(label)]
+        tts_robot = TTS()
+        for i in words:
+            print(i)
+            tts_robot.say(i)
+
 
     @staticmethod
     def doSortInFruit(px,foundObjectInfo):
@@ -278,6 +297,9 @@ class Matura23Utils(object):
         for i in words:
             print(i)
             tts_robot.say(i)
+        
+        
+
 
         
     @staticmethod
@@ -378,22 +400,41 @@ class Matura23Utils(object):
 
     @staticmethod
     def getFoundObjectInfo(cameraWidth,cameraHeight,fruitLabel=""):
+        # Wie bei Search Methode, Erkennung stabilisieren
+        # nicht gleich Code abbrechen wenn einmal Frucht nicht gefunden
+        # und nicht gleich zum Objekt fahren wenn nur einmal Frucht gesehen (evtl.falsch gesehene Frucht)
         foundYCoord = 0
         foundObjectInfo = {}
+        found = False
+        foundCount = 0
+        notFoundCount = 0
+        maxFoundCount = 3
+        maxNotFoundCount = 10
 
-        img = Vilib.detect_obj_parameter['object_img']
-        results = Vilib.detect_obj_parameter['object_results']
-        objectInfoList = Matura23Utils.getDetectedObjectInfoList(img, results, cameraWidth, cameraHeight)
-        if len(objectInfoList) > 0:
-            # Suche das Elemnt, welches zu unterst im Bildschirm ist und gleich fruitLabel ist
-            for i in range(len(objectInfoList)):
-                eachObject = objectInfoList[i]
-                if eachObject['y'] > foundYCoord and eachObject['label'] == fruitLabel:
-                    foundYCoord = eachObject['y']
-                    foundObjectInfo = eachObject
+        while foundCount < maxFoundCount and notFoundCount < maxNotFoundCount:
+            # Das Bild der gefundenen Frucht wird eingelesen
+            img = Vilib.detect_obj_parameter['object_img']
+            results = Vilib.detect_obj_parameter['object_results']
+            objectInfoList = Matura23Utils.getDetectedObjectInfoList(img, results, cameraWidth, cameraHeight)
             
-            print(foundObjectInfo)
-            return True, foundObjectInfo
-        
-        else:
-            return False, foundObjectInfo
+            # Suchen ob die Frucht mit bestimmtem Label
+            if len(objectInfoList) > 0:
+                # Suche das Elemnt, welches zu unterst im Bildschirm ist und gleich fruitLabel ist
+                for i in range(len(objectInfoList)):
+                    eachObject = objectInfoList[i]
+                    if eachObject['y'] > foundYCoord and eachObject['label'] == fruitLabel:
+                        foundYCoord = eachObject['y']
+                        foundObjectInfo = eachObject
+                        found = True
+            
+            else:
+                found = False
+                foundObjectInfo = {}
+
+            if found == True:
+                foundCount = foundCount + 1
+            else:
+                notFoundCount = notFoundCount + 1
+
+        print(foundObjectInfo)
+        return found,foundObjectInfo
