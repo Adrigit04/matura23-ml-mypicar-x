@@ -230,7 +230,7 @@ class Matura23Utils(object):
                     print("unknown direction to {}".format(label))
                     Matura23Utils.workaroundSetAngleZero(px)
 
-                time.sleep(0.5)
+                time.sleep(0.1)
                 px.stop()
                 print("END angelToObject{}".format(angleToObject))
 
@@ -269,11 +269,17 @@ class Matura23Utils(object):
 
         # Mit Echosensor warten, bis Objekt entfernt wird
         fruitInFront = True
+        targetDistance = 30
+        fruitNotInFront = 0
         while fruitInFront == True:
-            targetDistance = 30
             distance = round(px.ultrasonic.read(), 2)
+            time.sleep(0.1)
             if distance > targetDistance:
+                fruitNotInFront = fruitNotInFront + 1
+
+            if fruitNotInFront > 5:
                 fruitInFront = False
+
         time.sleep(1)
 
         words = ["thank you for picking up {}".format(label)]
