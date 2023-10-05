@@ -61,7 +61,8 @@ class Matura23Utils(object):
         foundCount = 0
         notFoundCount = 0
         maxFoundCount = 3
-        maxNotFoundCount = 200
+        maxNotFoundCount = 20
+        lastFoundObjectInfo = {}
 
         while(True):
 
@@ -80,6 +81,13 @@ class Matura23Utils(object):
                     if eachObject['y'] > foundYcord:
                         foundYcord = eachObject['y']
                         foundObjectInfo = eachObject
+
+                    # Damit er wenn er gefundene Früchte aus dem Auge verliert nicht gleich aufgibt 
+                    # und in eine neue Position geht, merkt er sich die gefunden Frucht
+                    # und versucht zuerst diese Frucht trotzdem zu finden
+                    lastFoundObjectInfo = foundObjectInfo
+
+
                 
                 foundCount = foundCount + 1
                 if foundCount >= maxFoundCount: # erst wenn es mehrmals gefunden wurde
@@ -96,8 +104,16 @@ class Matura23Utils(object):
                 foundObjectInfo = {}
                 foundYcord = 0
                 if notFoundCount >= maxNotFoundCount:
-                    print('no object found in this position')
-                    return False, foundObjectInfo
+
+                    # Wenn bereits eine Frucht gesehen, versucht er diese nun trotzdem zu fidnen
+                    # Wenn er diese aber nicht findet, geht er trotzdem weiter
+                    # um zu verhidnern, dass er jeder falsch geshenen Frucht nachgeht
+                    if lastFoundObjectInfo != {}:
+                        foundObjectInfo = lastFoundObjectInfo
+                        lastFoundObjectInfo = {}
+                    else:
+                        print('no object found in this position')
+                        return False, foundObjectInfo
                 
                 time.sleep(0.1)
 
