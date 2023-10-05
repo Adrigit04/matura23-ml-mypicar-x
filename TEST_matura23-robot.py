@@ -52,15 +52,15 @@ def main():
                 Matura23Utils.doGoInNewPosition(px,objectInfoList)
                 time.sleep(3)
 
-            if (False):
+            if (True):
                 found,foundObjectInfo = Matura23Utils.doSearchFruits(px,objectInfoList,CAMERA_WIDTH,CAMERA_HEIGHT)
                 time.sleep(0.1)
 
-            if (found == True):
-                nearFruit = Matura23Utils.doGoCloserToFruit(px,foundObjectInfo, CAMERA_WIDTH, CAMERA_HEIGHT)
-                break
+            #if (found == True):
+                #nearFruit = Matura23Utils.doGoCloserToFruit(px,foundObjectInfo, CAMERA_WIDTH, CAMERA_HEIGHT)
+                #break
 
-            if (True):
+            if (False):
                 Matura23Utils.doPickUpFruit(px,foundObjectInfo)
             
             if (False):

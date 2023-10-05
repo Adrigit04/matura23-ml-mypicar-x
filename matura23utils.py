@@ -325,6 +325,9 @@ class Matura23Utils(object):
 
         words = ["bring {} to correct slot".format(label)]
         Matura23Utils.speakOut(words)
+
+        px.backward(10)
+        time.sleep(0.5)
         
         
 
