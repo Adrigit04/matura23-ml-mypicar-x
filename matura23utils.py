@@ -44,6 +44,8 @@ class Matura23Utils(object):
         for angle in range(-35, 0):
             px.set_dir_servo_angle(angle)
             time.sleep(0.01)
+
+        time.sleep(0.5)
         
 
     @staticmethod
@@ -210,6 +212,7 @@ class Matura23Utils(object):
                     px.forward(velocity)
                     time.sleep(0.4)
                     px.stop()
+                    time.sleep(0.5)
 
                 elif directionX == 'left':
                     # lenken nach rechts ein, weil wir Rückwärts fahren
@@ -225,6 +228,7 @@ class Matura23Utils(object):
                     px.forward(velocity)
                     time.sleep(0.4)
                     px.stop()
+                    time.sleep(0.5)
 
                 else:
                     print("unknown direction to {}".format(label))
