@@ -157,9 +157,13 @@ class Matura23Utils(object):
                 # Faktor pro Pixel ist 35/320
                 steeringFactorPerPixel = (35/(cameraWidth/2))
                 angleToObject = int(deviationX*steeringFactorPerPixel)
-                print("angleToObject1:{}".format(angleToObject))
+                print("Start angleToObject1:{}".format(angleToObject))
                 print(angleToObject,lastAngleToObject)
                 print(directionX,lastDirectionX)
+                if angleToObject > 0:
+                    angleToObject = 20
+                else:
+                    angleToObject = -20
 
                 if directionX != "stop":
                     lastDirectionX = directionX
@@ -191,39 +195,40 @@ class Matura23Utils(object):
                 elif directionX == 'right':
                     # lenken nach links ein, weil wir Rückwärts fahren
                     # danach ein bisschen vorwärts
-                    px.set_dir_servo_angle(-angleToObject) # Weil Rückwärts, müssen wir servo auf andere Seite Richten
+                    for angle in range(0,-angleToObject,-1):
+                        px.set_dir_servo_angle(angle)
+                        time.sleep(0.01)
                     px.backward(velocity)
-                    time.sleep(0.2)
+                    time.sleep(0.4)
                     px.stop()
                     Matura23Utils.workaroundSetAngleZero(px)
+                    time.sleep(1)
                     px.forward(velocity)
-                    time.sleep(0.2)
+                    time.sleep(0.4)
                     px.stop()
 
                 elif directionX == 'left':
                     # lenken nach rechts ein, weil wir Rückwärts fahren
                     # danach ein bisschen vorwärts
-                    px.set_dir_servo_angle(-angleToObject) # - Weil Rückwärts, müssen wir servo auf andere Seite Richten
+                    for angle in range(0,-angleToObject):
+                        px.set_dir_servo_angle(angle)
+                        time.sleep(0.01)
                     px.backward(velocity)
-                    time.sleep(0.2)
+                    time.sleep(0.4)
                     px.stop()
                     Matura23Utils.workaroundSetAngleZero(px)
+                    time.sleep(1)
                     px.forward(velocity)
-                    time.sleep(0.2)
+                    time.sleep(0.4)
                     px.stop()
 
                 else:
-                    if lastDirectionX == 'right':
-                        px.set_dir_servo_angle(-lastAngleToObject)
-                        px.backward(10)
-                    elif lastDirectionX == 'left':
-                        px.set_dir_servo_angle(-lastAngleToObject)
-                        px.backward(10)
-
+                    print("unknown direction to {}".format(label))
                     Matura23Utils.workaroundSetAngleZero(px)
 
                 time.sleep(0.5)
                 px.stop()
+                print("END angelToObject{}".format(angleToObject))
 
 
                 # neues Bild wird ausgelesen
@@ -237,10 +242,6 @@ class Matura23Utils(object):
             px.stop()
             print("stop and exit")
             time.sleep(0.1)
-
-
-
-            
 
         if nearFruit == True:
             print('in front of object')
