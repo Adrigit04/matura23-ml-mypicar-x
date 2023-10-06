@@ -19,6 +19,8 @@ class Matura23Utils(object):
 
     sleepSeconds = 0.5
 
+    # standard ist English
+    speakInGerman = True
     
     @staticmethod
     def doGoInNewPosition(px,objectInfoList):
@@ -96,7 +98,9 @@ class Matura23Utils(object):
                     print("[doSearchFruit] object found:{}".format(foundObjectInfo))
 
                     words = ["I see a {}".format(foundObjectInfo['label'])]
-                    Matura23Utils.speakOut(words)
+                    if (Matura23Utils.speakInGerman):
+                        words = ["Ich sehe eine {}".format(foundObjectInfo['label'])]
+                    Matura23Utils.speakOut(words, Matura23Utils.speakInGerman)
 
                     return True, foundObjectInfo
                 
@@ -121,7 +125,10 @@ class Matura23Utils(object):
                     else:
                         print('no object found in this position')
                         words = ["no fruit in this position"]
-                        Matura23Utils.speakOut(words)
+                        if (Matura23Utils.speakInGerman):
+                            words = ["Keine Frucht an dieser Position"]
+                        Matura23Utils.speakOut(words, Matura23Utils.speakInGerman)
+
                         return False, foundObjectInfo
                 
                 time.sleep(0.1)
@@ -293,7 +300,9 @@ class Matura23Utils(object):
         print('doPickUpFruit')
 
         words = ["found {}".format(label)]
-        Matura23Utils.speakOut(words)
+        if (Matura23Utils.speakInGerman):
+            words = ["habe eine {} gefunden".format(label)]
+        Matura23Utils.speakOut(words, Matura23Utils.speakInGerman)
 
         # Mit Echosensor warten, bis Objekt entfernt wird
         fruitInFront = True
@@ -311,7 +320,9 @@ class Matura23Utils(object):
         time.sleep(1)
 
         words = ["thank you for picking up {}".format(label)]
-        Matura23Utils.speakOut(words)
+        if (Matura23Utils.speakInGerman):
+            words = ["Danke für das Auflesen der {}".format(label)]
+        Matura23Utils.speakOut(words, Matura23Utils.speakInGerman)
 
 
     @staticmethod
@@ -324,7 +335,9 @@ class Matura23Utils(object):
         time.sleep(0.5)
 
         words = ["please","bring {} to correct slot".format(label)]
-        Matura23Utils.speakOut(words)
+        if (Matura23Utils.speakInGerman):
+            words = ["Bitte bringe die {} in den richtigen Slot".format(label)]
+        Matura23Utils.speakOut(words, Matura23Utils.speakInGerman)
 
         px.backward(10)
         time.sleep(0.5)
@@ -340,8 +353,10 @@ class Matura23Utils(object):
         # workaround because tts isn't working without this code
         # https://forum.sunfounder.com/t/picar-x-speaker-not-working/289/2
         os.system('sudo killall pulseaudio')
-        words = ["Lets go"]
-        Matura23Utils.speakOut(words)
+        words = ["... Hi", "Lets go"]
+        if (Matura23Utils.speakInGerman):
+            words = ["... Hallo", "Los gehts"]
+        Matura23Utils.speakOut(words, Matura23Utils.speakInGerman)
         
         
     @staticmethod
@@ -349,8 +364,9 @@ class Matura23Utils(object):
         # Konfigurationen zum Beenden des Codes
         print('doEnd')
         words = ["task completed"]
-        Matura23Utils.speakOut(words)
-
+        if (Matura23Utils.speakInGerman):
+            words = ["Task erledigt"]
+        Matura23Utils.speakOut(words, Matura23Utils.speakInGerman)
 
 
 
@@ -479,9 +495,12 @@ class Matura23Utils(object):
         return found,foundObjectInfo
 
 
-    @staticmethod
-    def speakOut(words):
-        tts_robot = TTS()
+    def speakOut(words, speakInGerman):
+        language = None
+        if (speakInGerman == True):
+            language = "de-DE"
+
+        tts_robot = TTS(lang=language)
         for i in words:
             print(i)
             tts_robot.say(i)
