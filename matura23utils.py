@@ -496,11 +496,10 @@ class Matura23Utils(object):
 
 
     def speakOut(words, speakInGerman):
-        language = None
+        tts_robot = TTS()
         if (speakInGerman == True):
-            language = "de-DE"
+            tts_robot.lang("de-DE")
 
-        tts_robot = TTS(lang=language)
         for i in words:
             print(i)
             tts_robot.say(i)
