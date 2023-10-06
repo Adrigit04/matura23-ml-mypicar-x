@@ -336,7 +336,7 @@ class Matura23Utils(object):
 
         words = ["please","bring {} to correct slot".format(label)]
         if (Matura23Utils.speakInGerman):
-            words = ["Bitte bringe die {} in den richtigen Slot".format(label)]
+            words = ["Bitte bringe die {} an den zugehörigen Ort".format(label)]
         Matura23Utils.speakOut(words, Matura23Utils.speakInGerman)
 
         px.backward(10)
@@ -365,7 +365,7 @@ class Matura23Utils(object):
         print('doEnd')
         words = ["task completed"]
         if (Matura23Utils.speakInGerman):
-            words = ["Task erledigt"]
+            words = ["Aufgabe erledigt"]
         Matura23Utils.speakOut(words, Matura23Utils.speakInGerman)
 
 
