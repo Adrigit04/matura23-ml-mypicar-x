@@ -18,10 +18,10 @@ def main():
     Matura23Utils.doStart()
 
     Vilib.camera_start(vflip=False,hflip=False)
-    Vilib.display(local=True,web=True) 
+    Vilib.display(local=True,web=False) 
     #Vilib.object_detect_set_model(path='/opt/vilib/detect.tflite')
     #Vilib.object_detect_set_labels(path='/opt/vilib/coco_labels.txt')
-    Vilib.object_detect_set_model(path='/opt/vilib/matura23/Run2023-09-30/detect.tflite')
+    Vilib.object_detect_set_model(path='/opt/vilib/matura23/Run2023-09-30/edgetpu.tflite')
     Vilib.object_detect_set_labels(path='/opt/vilib/matura23/labels.txt')
     Vilib.object_detect_switch(True)
 
