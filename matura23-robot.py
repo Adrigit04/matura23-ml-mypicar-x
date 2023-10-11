@@ -67,6 +67,11 @@ def main():
 
     Matura23Utils.doEnd()
 
+    Vilib.camera_close()
+    time.sleep(5)
+    print("bye...")
+    exit(0)
+
 if __name__ == "__main__":
     main()
 

@@ -352,7 +352,7 @@ class Matura23Utils(object):
         print('doStart')
         # workaround because tts isn't working without this code
         # https://forum.sunfounder.com/t/picar-x-speaker-not-working/289/2
-        os.system('sudo killall pulseaudio')
+        #os.system('sudo killall pulseaudio')
         words = ["... Hi", "Lets go"]
         if (Matura23Utils.speakInGerman):
             words = ["... Hallo", "Los gehts"]
@@ -379,7 +379,7 @@ class Matura23Utils(object):
     @staticmethod        
     def getDetectedObjectInfoList(img,results,cameraWidth,cameraHeight):
         objectInfoList = []
-        excludedFruitList = ['zitrone']
+        excludedFruitList = []
 
             # in results ist die Liste der erkannten Objekte
         if (len(results) > 0 and results[0] is not None):
@@ -471,15 +471,22 @@ class Matura23Utils(object):
             img = Vilib.detect_obj_parameter['object_img']
             results = Vilib.detect_obj_parameter['object_results']
             objectInfoList = Matura23Utils.getDetectedObjectInfoList(img, results, cameraWidth, cameraHeight)
-            
+
             # Suchen ob die Frucht mit bestimmtem Label
-            if len(objectInfoList) > 0:
-                # Suche das Elemnt, welches zu unterst im Bildschirm ist und gleich fruitLabel ist
-                for i in range(len(objectInfoList)):
-                    eachObject = objectInfoList[i]
-                    if eachObject['y'] > foundYCoord and eachObject['label'] == fruitLabel:
-                        foundYCoord = eachObject['y']
-                        foundObjectInfo = eachObject
+            if len(objectInfoList) > 0: 
+                # Suche das Elemnt, welches zu unterst im Bildschirm ist und gleich fruitLabel ist 
+                for i in range(len(objectInfoList)): 
+                    eachObject = objectInfoList[i] 
+                    # Da die Kamera ab einem gewissen Punkt die Frucht nicht mehr erkennt 
+                    # nehmen wir die unterste Frucht im Bild und setzen das ursprünglich 
+                    # gefundene label "fruitLabel" 
+                    #if eachObject['y'] > foundYCoord and eachObject['label'] == fruitLabel: 
+                    if eachObject['y'] > foundYCoord: 
+                        foundYCoord = eachObject['y'] 
+                        foundObjectInfo = eachObject 
+                        # hier setzen wir das ursprünglich gefundene Label 
+                        if foundObjectInfo['label'] != fruitLabel: 
+                            foundObjectInfo['label'] = fruitLabel 
                         found = True
             
             else:
@@ -496,29 +503,32 @@ class Matura23Utils(object):
 
 
     def speakOut(words, speakInGerman):
-        # orig 
-        #tts_robot = TTS() 
-        #for i in words: 
-        #    print(i) 
-        #    tts_robot.say(i) 
+        try:
+            # orig 
+            #tts_robot = TTS() 
+            #for i in words: 
+            #    print(i) 
+            #    tts_robot.say(i) 
 
-        # newest robot_hat 2.0 
-        language = None 
-        if (speakInGerman == True): 
-            language = "de-DE" 
+            # newest robot_hat 2.0 
+            language = None 
+            if (speakInGerman == True): 
+                language = "de-DE" 
 
-        tts_robot = TTS(lang=language) 
-        for i in words: 
-            print(i) 
-            tts_robot.say(i) 
+            tts_robot = TTS(lang=language) 
+            for i in words: 
+                print(i) 
+                tts_robot.say(i) 
 
-        # older robot_hat 
-        #tts_robot = TTS() 
-        #if (speakInGerman == True): 
-        #    tts_robot.lang("de-DE") 
+            # older robot_hat 
+            #tts_robot = TTS() 
+            #if (speakInGerman == True): 
+            #    tts_robot.lang("de-DE") 
 
-        #for i in words: 
-        #    print(i) 
-        #    tts_robot.say(i)
+            #for i in words: 
+            #    print(i) 
+            #    tts_robot.say(i)
+        except Exception as e:
+            print("Error: ", e)
 
 
